@@ -1,16 +1,19 @@
 import os
+from tkinter.tix import Tree
 
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
 import rubiks_cube_gym  
 
-from stable_baselines3 import TD3, PPO
+from stable_baselines3 import TD3, PPO, A2C,DQN
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.results_plotter import load_results, ts2xy
 from stable_baselines3.common.noise import NormalActionNoise
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common import results_plotter
+from stable_baselines3.common.env_util import make_vec_env
+
 import torch
 
 class SaveOnBestTrainingRewardCallback(BaseCallback):
@@ -63,9 +66,12 @@ log_dir = "./tmp/gym/"
 os.makedirs(log_dir, exist_ok=True)
 
 # Create and wrap the environment
-env = gym.make("rubiks-cube-222-v0")
+# env = gym.make("rubiks-cube-222-v0")
+
+# Parallel environments
+env = make_vec_env("rubiks-cube-222-v0", n_envs=4)
 # Logs will be saved in log_dir/monitor.csv
-env = Monitor(env, log_dir)
+# env = Monitor(env, log_dir)
 
 
 
@@ -73,7 +79,7 @@ env = Monitor(env, log_dir)
 # Create the callback: check every 1000 steps
 callback = SaveOnBestTrainingRewardCallback(check_freq=1000, log_dir=log_dir)
 # Create RL model
-model = PPO("MlpPolicy", env, verbose=1,learning_rate=0.0003, n_steps=50000, batch_size=64)
+model = A2C("MlpPolicy", env, verbose=1)
 # Train the agent
 model.learn(total_timesteps=int(1e5), callback=callback)
 
