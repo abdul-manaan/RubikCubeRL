@@ -70,14 +70,12 @@ env = Monitor(env, log_dir)
 
 
 # Create action noise because TD3 and DDPG use a deterministic policy
-n_actions = 3
-action_noise = NormalActionNoise(mean=np.zeros(n_actions), sigma=0.1 * np.ones(n_actions))
 # Create the callback: check every 1000 steps
 callback = SaveOnBestTrainingRewardCallback(check_freq=1000, log_dir=log_dir)
 # Create RL model
 model = PPO("MlpPolicy", env, verbose=1,learning_rate=0.0003, n_steps=2048, batch_size=64)
 # Train the agent
-model.learn(total_timesteps=int(5e4), callback=callback)
+model.learn(total_timesteps=int(5e2), callback=callback)
 
 
 # Helper from the library

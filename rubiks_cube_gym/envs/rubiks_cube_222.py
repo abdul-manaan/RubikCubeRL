@@ -103,7 +103,7 @@ class RubiksCube222Env(gym.Env):
         observation = self.cube_state
         info = {"cube": self.cube, "cube_reduced": self.cube_reduced}
         self.total_len += 1
-        if done == True or self.total_len > 10:
+        if self.total_len > 10:
             self.reset()
 
         return observation, reward, done, info
