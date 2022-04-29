@@ -1,5 +1,6 @@
 import pickle
 import random
+from tkinter.tix import Tree
 import gym
 from gym import spaces
 import os
@@ -29,6 +30,7 @@ class RubiksCube222Env(gym.Env):
 
         with open(state_file, "rb") as f:
             self.cube_states = pickle.load(f)
+        self.total_len = 0
 
     def update_cube_reduced(self):
         self.cube_reduced = ''.join(TILE_MAP[tile] for tile in self.cube)
@@ -97,8 +99,12 @@ class RubiksCube222Env(gym.Env):
         self.update_cube_state()
 
         reward, done = self.reward()
+        
         observation = self.cube_state
         info = {"cube": self.cube, "cube_reduced": self.cube_reduced}
+        self.total_len += 1
+        if done == True or self.total_len > 10:
+            self.reset()
 
         return observation, reward, done, info
 
@@ -111,6 +117,7 @@ class RubiksCube222Env(gym.Env):
     def reset(self, scramble=None):
         self.cube = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
                              dtype=np.uint8)
+        self.total_len = 0
         if scramble:
             self.algorithm(scramble)
         elif scramble == False:
