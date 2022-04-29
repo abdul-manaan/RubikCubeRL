@@ -166,4 +166,4 @@ COLOR_MAP = {
     'Y': (255, 255, 0)
 }
 
-ACTION_MAP = {0: ("F", None), 1: ("R", None), 2: ("U", None)}
+ACTION_MAP = {0: ("F", None), 1: ("R", None), 2: ("U", None), 3: ("B", None), 4: ("L", None), 5: ("D", None)}
